@@ -1,4 +1,3 @@
----
 sudo: required
 language: bash
 services:
@@ -15,3 +14,11 @@ notifications:
   email:
     on_success: never
     on_failure: always
+deploy:
+  token:
+    secure: kVXMPAxLHljq5sfCe2IaDLzcHR224RcRx8NR5Th8typx7ouqOfBVLhuFrDRkubD5WebStjx3SWstiQm4MlmH8PoNQ/+hc7nXNDUrDAI2TlzWMUHMa2YjT0T7Ih0u5G6MyyFQweTeRhjTO9h8ZTsmtyp2GgMdr4P2Ql8tO4ueWqAVy77ngwfRxqWllvrXCF3891pu3H0Dbii7q7Pn94DYO/Rpak5yXDRenYC9SL0ZPTD8g1uJq4ujbPmYf7pTyjiuWNkYQNHi0XICwC0y4Bvzgc/AHuvUAX7unjIC+WfgSa4jMezPfYfEwBx+1PLM7UlO+CheuOdi69wgDshzMB3Ph31Ts1ZLfgeJ8lHWGBzQAv0gQDLT7qFtMBqVpIgHIqV6gqBP48rQC1xo2UAlIcFUMkPyg99xzHh++e+feO10tyoTux2vGf0g/kZqIO9M1jGUBjywdPB70YGE8iraybYJugOhbwsrrkjeey9xIDAqqs2XcN5Dk7zOy0xwMIex6owf+iOmRyCnlzmAVaAgZhNRozlFj67f+14ihlZCX0LsfFVqNqmmqbz2VR2hVxKzPRY9rOkKDWq/puT//saFT4LX4hgEShIJWqCmZ/E+DR7MZ6C+8qDHFhuhrXLdfuT2Q1/LQTG5zn+pdgY/LZxurSDJm7r/gCje9RKhajPXWWDfLh0=
+  provider: packagecloud
+  repository: mg
+  username: marknexcess
+  local-dir: results
+  package_glob: "*.rpm"
