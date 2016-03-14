@@ -9,8 +9,7 @@ env:
   global:
     secure: d8d2D0Us7/ZDbfyK2ehz168vFmVumIHgSLaHM1gE37Cgy1nWoG5ZArkT2F+AbJn9nJRsBJ3tS/gBXxCF6sH2ySOafZCdnBJsQFxMyXwbE6EAk0ibzcqR/caaucFHrK2KrTwPmtxmi+OaZ5iawUneHkeBnQtSD9uiWItZv5ypirdh1fU44tU57UlD6MCwRZW7MieFOMlYLk+kO0ZNt+nMdito1OmuLkh4qooiDl/tENwqIgvOWFjQRWLeDCDfuGMuQj9P1v0xQmRMUuIhnDYDVjDAmOi+CB6nc1Y5X397C93Q5Q8311y3Kn8PcW6lSrbhBif+OekCZpxtjgdCu8+Kn+/FW0FDyrqNbSrkk7yvxurg7s1Kh1ealMUEzt+WrzmJeZtGqMBq2vpTM+sIRQBGiOgwVSpruBXNFQ5aS3Oq6E5608/iwkbYnbcqqXR3wBhJ9cXAKLkQXRFXSb84oPkLD/L3wrx5+6ndmO4eFKRDYrDVb5fnlB0lVXB/kfgU8cJ9/rOXwIlVkvYbxXjTd2Qk2MjvHvg9jP2Uwp1c4UjM49ZD3Gjjcz29Ki4J2aKlWxsfq9f9F64+MfWUgFGtP6x65R9l7bk5dqn5wRgfDhHAHV/aMoA2TObQpbM6z21B29PeRy2FetacF8BG9JzsX21/t1lKnwg0qGLh8lNltOiTVnQ=
   matrix:
-#    - MOCK_CONFIG="epel-6-i386"
-#    - MOCK_CONFIG="epel-6-x86_64"
+    - MOCK_CONFIG="epel-6-x86_64"
     - MOCK_CONFIG="epel-7-x86_64"
 script:
   - docker run -e MOCK_CONFIG="${MOCK_CONFIG}" -v "$(pwd):/rpmbuild" --privileged=true mmckinst/rpmbuilder
@@ -19,4 +18,5 @@ notifications:
     on_success: never
     on_failure: always
 after_success:
+  - 'package_cloud push marknexcess/mg/el/6 results/epel-6-x86_64/*rpm'
   - 'package_cloud push marknexcess/mg/el/7 results/epel-7-x86_64/*rpm'
