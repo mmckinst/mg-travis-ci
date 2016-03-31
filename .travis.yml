@@ -1,23 +1,21 @@
 ---
 sudo: required
-language: bash
-services:
-  - docker
-before_install:
-  - docker pull mmckinst/rpmbuilder
-  - gem install package_cloud
+dist: trusty
+language: python
 env:
   global:
-    secure: d8d2D0Us7/ZDbfyK2ehz168vFmVumIHgSLaHM1gE37Cgy1nWoG5ZArkT2F+AbJn9nJRsBJ3tS/gBXxCF6sH2ySOafZCdnBJsQFxMyXwbE6EAk0ibzcqR/caaucFHrK2KrTwPmtxmi+OaZ5iawUneHkeBnQtSD9uiWItZv5ypirdh1fU44tU57UlD6MCwRZW7MieFOMlYLk+kO0ZNt+nMdito1OmuLkh4qooiDl/tENwqIgvOWFjQRWLeDCDfuGMuQj9P1v0xQmRMUuIhnDYDVjDAmOi+CB6nc1Y5X397C93Q5Q8311y3Kn8PcW6lSrbhBif+OekCZpxtjgdCu8+Kn+/FW0FDyrqNbSrkk7yvxurg7s1Kh1ealMUEzt+WrzmJeZtGqMBq2vpTM+sIRQBGiOgwVSpruBXNFQ5aS3Oq6E5608/iwkbYnbcqqXR3wBhJ9cXAKLkQXRFXSb84oPkLD/L3wrx5+6ndmO4eFKRDYrDVb5fnlB0lVXB/kfgU8cJ9/rOXwIlVkvYbxXjTd2Qk2MjvHvg9jP2Uwp1c4UjM49ZD3Gjjcz29Ki4J2aKlWxsfq9f9F64+MfWUgFGtP6x65R9l7bk5dqn5wRgfDhHAHV/aMoA2TObQpbM6z21B29PeRy2FetacF8BG9JzsX21/t1lKnwg0qGLh8lNltOiTVnQ=
-  matrix:
-    - MOCK_CONFIG="epel-6-x86_64"
-    - MOCK_CONFIG="epel-7-x86_64"
+    - COPR_PROJECT="marknexcess/mg"
+    - secure: "Pl87Ab5auad57MXd/8Fro4/M04VQjnmAzSnPmx/E+3/YT5ZJX1/c+JLMRSpmUXniLRPXQ7ImKt8w0SVoA9QgXR8E0icOPcOWYwNe+o8yT3XfC0o3NZkwKlo4stm/7Xe5ZziK16mT6ojhrWuwT/EbKb5g41uUU2y1DHj6Z3TCxxH2gGf2kgQ7dsXG6JDNu5OreUPt3yO2PzEeF5vw5eegDQVLEn9PInSNMSN8Zfwpc5914vyU1Lapv88e33s/Rt9bKYfLVvgrn6TpV2zF5wzVFdb5R4g50QBjDDFvEBRYADk0LczEd9GvMN82Mtv5P5JoimfJ3hp7Gd6KmOh6R/bNtTgV1PAeqbHASOKlStEGieMGbFcGrtmCavcDhDLMb2eNOfS/D0XX61FD0GUxUPm3Sy5Z0mc5h15eR+brqab/v39JUFBufqK5DkWiiXQCtyUC/LQvBApCfCmebgaD0AsYBFyRQYO6h3TueVlsqONY/EYYOJ4f4HbH6hyTXCgaI6mky3SBsTtVOY+jEZUfpu+6FPMUr1/S025OuZmB3869Tz2c0AGvnNVp+lC4AgCnemP0KTl/LzTzSX/Qzs3ZKH45QPxR1CKOkwpy8B5PmgHdKdWGlUWjes3qqsGQJ+Czs+xar0hjtwS8bj+Uq4gG2sLOhuU73P7LpwQXGLDj+R/+0CM="
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y rpm wget
+  - mkdir -p BUILD RPMS SOURCES SPECS SRPMS
+install: pip install copr copr-cli
 script:
-  - docker run -e MOCK_CONFIG="${MOCK_CONFIG}" -v "$(pwd):/rpmbuild" --privileged=true mmckinst/rpmbuilder
+  - rpmspec -P  SPECS/mg.spec | awk '/^Source/ {print $2}' | xargs -n1 wget -P SOURCES
+  - rpmbuild -bs --define '_topdir ./' SPECS/*spec
+  - copr-cli --config .copr --nowait build ${COPR_PROJECT} SRPMS/*src.rpm
 notifications:
   email:
     on_success: never
     on_failure: always
-after_success:
-  - 'package_cloud push marknexcess/mg/el/6 results/epel-6-x86_64/*rpm'
-  - 'package_cloud push marknexcess/mg/el/7 results/epel-7-x86_64/*rpm'
