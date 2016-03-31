@@ -3,13 +3,12 @@ sudo: required
 dist: trusty
 language: python
 env:
-  global:
-    - COPR_PROJECT="marknexcess/mg"
-    - secure: "Pl87Ab5auad57MXd/8Fro4/M04VQjnmAzSnPmx/E+3/YT5ZJX1/c+JLMRSpmUXniLRPXQ7ImKt8w0SVoA9QgXR8E0icOPcOWYwNe+o8yT3XfC0o3NZkwKlo4stm/7Xe5ZziK16mT6ojhrWuwT/EbKb5g41uUU2y1DHj6Z3TCxxH2gGf2kgQ7dsXG6JDNu5OreUPt3yO2PzEeF5vw5eegDQVLEn9PInSNMSN8Zfwpc5914vyU1Lapv88e33s/Rt9bKYfLVvgrn6TpV2zF5wzVFdb5R4g50QBjDDFvEBRYADk0LczEd9GvMN82Mtv5P5JoimfJ3hp7Gd6KmOh6R/bNtTgV1PAeqbHASOKlStEGieMGbFcGrtmCavcDhDLMb2eNOfS/D0XX61FD0GUxUPm3Sy5Z0mc5h15eR+brqab/v39JUFBufqK5DkWiiXQCtyUC/LQvBApCfCmebgaD0AsYBFyRQYO6h3TueVlsqONY/EYYOJ4f4HbH6hyTXCgaI6mky3SBsTtVOY+jEZUfpu+6FPMUr1/S025OuZmB3869Tz2c0AGvnNVp+lC4AgCnemP0KTl/LzTzSX/Qzs3ZKH45QPxR1CKOkwpy8B5PmgHdKdWGlUWjes3qqsGQJ+Czs+xar0hjtwS8bj+Uq4gG2sLOhuU73P7LpwQXGLDj+R/+0CM="
+  - COPR_PROJECT="marknexcess/mg"
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y rpm wget
   - mkdir -p BUILD RPMS SOURCES SPECS SRPMS
+  - openssl aes-256-cbc -K $encrypted_dccc5e4cac06_key -iv $encrypted_dccc5e4cac06_iv -in .copr.enc -out .copr -d
 install: pip install copr copr-cli
 script:
   - rpmspec -P  SPECS/mg.spec | awk '/^Source/ {print $2}' | xargs -n1 wget -P SOURCES
