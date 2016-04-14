@@ -1,6 +1,6 @@
 Name:		mg
 Version:	20090107
-Release:	6%{?dist}
+Release:	7%{?dist}
 Summary:	Tiny Emacs-like editor
 
 Group:		Applications/Editors
